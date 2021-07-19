@@ -18,6 +18,8 @@ public class JumpingScript : MonoBehaviour
     public float delayBetwinJumping;
     public int numberOfjumps;
 
+   
+
     // Start is called before the first frame update
     void Start()
     {        
@@ -48,6 +50,14 @@ public class JumpingScript : MonoBehaviour
             transform.position = Vector3.Lerp(doorPosition, counterPosition, progress);
             progress += speedOfBuyer;
         }
+        if (transform.position == counterPosition  && !GameBehaviour.current.thereIsUnion)
+        {
+           
+            GameBehaviour.current.bayerWantToSay = true;
+            GameBehaviour.current.thereIsUnion = true;
+        }
+
+        //Vector3(4.6282115, 4.6282115, 4.6282115)  Vector3(1.78999996,2.36999989,-1)
 
 
     }

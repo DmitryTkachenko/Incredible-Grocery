@@ -138,4 +138,5 @@ MonoBehaviour:
   acceleration: 10
   gravityWhileJumping: 3
   delayBetwinJumping: 0.5
-  numberOfjumps: 6
+  numberOfjumps: 8
+  UnionOfOrderPrefab: {fileID: 5882629899684306146, guid: cccac2ce107ab284397c6b3ad6b31777, type: 3}
