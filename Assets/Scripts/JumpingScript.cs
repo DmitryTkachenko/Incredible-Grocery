@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class JumpingScript : MonoBehaviour
 {
-    private float speedOfBuyer = 0.008f;    
+    public float speedOfBuyer ;    
     private float progress;
     private Vector3 startPosition;
     private Vector3 doorPosition = new Vector3(-6.87f, 0.65f, -1);
@@ -32,14 +32,13 @@ public class JumpingScript : MonoBehaviour
     {
         if (!buyerIsNextToTheDoor)
         {
-            transform.position = Vector3.Lerp(startPosition, doorPosition, progress);
+            transform.position = Vector3.Lerp(startPosition, doorPosition, progress) ;
             progress += speedOfBuyer;
             if (transform.position == doorPosition)
             {
-                buyerIsNextToTheDoor = true;
                 progress = 0;
-                GameObject.Find("Entrance").transform.position = new Vector3(-7.258f, 1.4648f, 0);
-                speedOfBuyer = 0.005f;
+                buyerIsNextToTheDoor = true;
+                GameObject.Find("Entrance").transform.position = new Vector3(-7.258f, 1.4648f, 0);               
                 GetComponent<Rigidbody2D>().gravityScale = gravityWhileJumping;
                 StartCoroutine(JumpingCoroutine());
             }
@@ -47,6 +46,7 @@ public class JumpingScript : MonoBehaviour
         }
         if (buyerIsNextToTheDoor)
         {
+            
             transform.position = Vector3.Lerp(doorPosition, counterPosition, progress);
             progress += speedOfBuyer;
         }

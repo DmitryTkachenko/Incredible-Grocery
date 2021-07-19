@@ -134,9 +134,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d4c7fe5b7d4e6f48931586587ea5fc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speedOfBuyer: 0.006
   direction: {x: 1, y: 1}
-  acceleration: 10
-  gravityWhileJumping: 3
-  delayBetwinJumping: 0.5
+  acceleration: 3
+  gravityWhileJumping: 2
+  delayBetwinJumping: 0.4
   numberOfjumps: 8
-  UnionOfOrderPrefab: {fileID: 5882629899684306146, guid: cccac2ce107ab284397c6b3ad6b31777, type: 3}

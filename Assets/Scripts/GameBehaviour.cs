@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Linq;
+using UnityEngine.UI;
+
 
 public class GameBehaviour : MonoBehaviour
 {
@@ -13,7 +15,7 @@ public class GameBehaviour : MonoBehaviour
     private GameObject[] Order;
     private GameObject[] OrderClones;
     private int amountOPproducts;
-    public bool  thereIsUnion;
+    public bool thereIsUnion;
     public float orderUnionVisibleDelie;
 
 
@@ -23,7 +25,20 @@ public class GameBehaviour : MonoBehaviour
     public GameObject UnionOfOrderPrefab;
     private GameObject UnionOrOrderClone;
 
+    private Vector3 storegeStartPosition;
+    private Vector3 storegeFinishPosition;
+    public float speedStorage;
+    private float progressOfStorage;
+    public GameObject Storage;
+    private bool storageShoulBeVisible;
 
+    public GameObject[] PointedProducts;
+    private int amountProducts;
+    private GameObject[] TickClones;
+    public GameObject Tick;
+    int counter = 0;
+    public GameObject SellButton;
+    public float alphaValueInvisibleSell;
 
     private void Awake()
     {
@@ -33,7 +48,9 @@ public class GameBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       
+        counter = 0;        
+        storegeStartPosition = new Vector3(12.26f, 0.34f, -1);
+        storegeFinishPosition = new Vector3(5.71f, 0.34f, -1);
          Instantiate(buyerPrefab, new Vector3(-8.3f, 0.95f, -1), Quaternion.identity);
         //current.amountOPproducts = Products.Count;
     }
@@ -46,62 +63,82 @@ public class GameBehaviour : MonoBehaviour
             StartCoroutine(OrderVisibleCoroutine());
             bayerWantToSay = false;
         }
+        if (storageShoulBeVisible)
+        {
+            Storage.transform.position = Vector3.Lerp(storegeStartPosition, storegeFinishPosition, progressOfStorage);
+            progressOfStorage += speedStorage;
+        }
     }
 
     IEnumerator OrderVisibleCoroutine()
     {
         Ordering();
-        current.UnionOrOrderClone =(GameObject)Instantiate(UnionOfOrderPrefab, new Vector3(1.78f, 2.36f, -1), Quaternion.identity);
+        UnionOrOrderClone =(GameObject)Instantiate(UnionOfOrderPrefab, new Vector3(1.78f, 2.36f, -1), Quaternion.identity);
         bayerWantToSay = false;
         yield return new WaitForSeconds(orderUnionVisibleDelie);
-       MakeOrderIvisable();
+       MakeOrderInvisable();
+        storageShoulBeVisible = true;
+        
     }
 
     void Ordering()
     {
         System.Random randAmountProducts=new System.Random();
-        var amountProducts = randAmountProducts.Next(1,4);
+        amountProducts = randAmountProducts.Next(1,4);
+        PointedProducts = new GameObject[amountProducts];
         Order = new GameObject[amountProducts];
         OrderClones = new GameObject[amountProducts];
         for (var i = 0; i < amountProducts; i++)
         {
             System.Random randProducts = new System.Random();
             var randProductId = randProducts.Next(1, Products.Length);
-            current.Order[i] = Products[randProductId];
+            Order[i] = Products[randProductId];
             GameObject obgToRemove = Products[randProductId];
             Products = Products.Where(val => val != obgToRemove).ToArray();
         }
         switch (amountProducts)
         {
             case 1:
-                current.OrderClones[0] = (GameObject)Instantiate(Order[0], new Vector3(1.67f, 2.66f, -5), Quaternion.identity);/*.transform.localScale = new Vector3(2.77f, 2.77f, 1);*/
-                current.OrderClones[0].transform.localScale = new Vector3(2.77f, 2.77f, 1);
+                OrderClones[0] = (GameObject)Instantiate(Order[0], new Vector3(1.67f, 2.66f, -5), Quaternion.identity);/*.transform.localScale = new Vector3(2.77f, 2.77f, 1);*/
+                OrderClones[0].transform.localScale = new Vector3(2.77f, 2.77f, 1);
                 break;
             case 2:
-                current.OrderClones[0] = (GameObject)Instantiate(Order[0], new Vector3(2.31f, 2.66f, -5), Quaternion.identity);
-                current.OrderClones[0].transform.localScale = new Vector3(2.77f, 2.77f, 1);
-                current.OrderClones[1] = (GameObject)Instantiate(Order[1], new Vector3(0.94f, 2.66f, -5), Quaternion.identity);
-                current.OrderClones[1].transform.localScale = new Vector3(2.77f, 2.77f, 1);
+                OrderClones[0] = (GameObject)Instantiate(Order[0], new Vector3(2.31f, 2.66f, -5), Quaternion.identity);
+                OrderClones[0].transform.localScale = new Vector3(2.77f, 2.77f, 1);
+                OrderClones[1] = (GameObject)Instantiate(Order[1], new Vector3(0.94f, 2.66f, -5), Quaternion.identity);
+                OrderClones[1].transform.localScale = new Vector3(2.77f, 2.77f, 1);
                 break;
             case 3:
-                current.OrderClones[0] = (GameObject)Instantiate(Order[0], new Vector3(0.45f, 2.66f, -5), Quaternion.identity);
-                current.OrderClones[0].transform.localScale = new Vector3(2.77f, 2.77f, 1);
-                current.OrderClones[1] = (GameObject)Instantiate(Order[1], new Vector3(1.74f, 2.66f, -5), Quaternion.identity);
-                current.OrderClones[1].transform.localScale = new Vector3(2.77f, 2.77f, 1);
-                current.OrderClones[2] = (GameObject)Instantiate(Order[2], new Vector3(2.96f, 2.66f, -5), Quaternion.identity);
-                current.OrderClones[2].transform.localScale = new Vector3(2.77f, 2.77f, 1);
+                OrderClones[0] = (GameObject)Instantiate(Order[0], new Vector3(0.45f, 2.66f, -5), Quaternion.identity);
+                OrderClones[0].transform.localScale = new Vector3(2.77f, 2.77f, 1);
+                OrderClones[1] = (GameObject)Instantiate(Order[1], new Vector3(1.74f, 2.66f, -5), Quaternion.identity);
+                OrderClones[1].transform.localScale = new Vector3(2.77f, 2.77f, 1);
+                OrderClones[2] = (GameObject)Instantiate(Order[2], new Vector3(2.96f, 2.66f, -5), Quaternion.identity);
+                OrderClones[2].transform.localScale = new Vector3(2.77f, 2.77f, 1);
                 break;
         }
     }
 
-    void MakeOrderIvisable()
+    void MakeOrderInvisable()
     {
 
-        for (var i = 0; i < current.OrderClones.Length; i++)
+        for (var i = 0; i < OrderClones.Length; i++)
         {
-            current.OrderClones[i].GetComponent<Renderer>().enabled = false;
+            OrderClones[i].GetComponent<Renderer>().enabled = false;
 
         }
-        current.UnionOrOrderClone.GetComponent<Renderer>().enabled = false;
+       UnionOrOrderClone.GetComponent<Renderer>().enabled = false;
+    }
+
+    public void CompareOrderAndBusket(GameObject productInBasket)
+    {
+
+        Vector3 prodPos = productInBasket.transform.position;
+        TickClones = new GameObject[amountProducts];
+        if (counter < amountProducts)
+        {
+            TickClones[counter] = (GameObject)Instantiate(Tick, new Vector3(prodPos.x, prodPos.y, prodPos.z - 1), Quaternion.identity);
+            counter++;
+        }
     }
 }
